@@ -1,0 +1,156 @@
+# UCLALib values for prod shoreline.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+runEnv: prod
+
+replicaCount: 1
+
+image:
+  repository: registry.gitlab.com/surfliner/surfliner/shoreline
+  name: shoreline
+  #tag: stable
+  # Tag for UCLA Branding
+  tag: 4cdf74059e153c569e3291bd2b916ccd70e80981
+  pullPolicy: Always
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+# Settings specific to the optional shoreline consumer script
+consumer:
+  enabled: false 
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: sectigo-rsa
+    kubernetes.io/tls-acme: "true"
+  hosts: ['geodata.library.ucla.edu']
+  tls:
+  - hosts:
+    - geodata.library.ucla.edu
+    secretName: prod-geodata-tls
+
+# Set to true if a Secret already exists in the namespace for the Deployment
+existingSecret:
+  name: shoreline-externalsecret
+  enabled: true
+  externalSecrets:
+    geoserver_admin_passwd: "/test/testsoftwaredev/shorelinetest/shoreline/geoserver_admin_passwd"
+    db_passwd: "/test/testsoftwaredev/shorelinetest/shoreline/db_passwd"
+    db_username: "/test/testsoftwaredev/shorelinetest/shoreline/db_username"
+    secret_key_base: "/test/testsoftwaredev/shorelinetest/shoreline/secret_key_base"
+    smtp_password: "/test/testsoftwaredev/shorelinetest/shoreline/smtp_password"
+    solr_url: "/test/testsoftwaredev/shorelinetest/shoreline/solr_url"
+
+# Shoreline resources
+resources:
+  requests:
+    cpu: 500m
+    memory: 512Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+shoreline:
+  disableSolrConfigInit: true
+  db_setup_command: "db:migrate"
+  geoblacklightDownloadPath: /data/tmp/cache/downloads
+  loadSolrConfigSet: false # use false to skip solr configset maintenance init container
+  provenance: "UC Los Angeles"
+  theme: "ucla"
+# whether to ingest fixture data during deployment
+  sample_data:
+  suppressTools: false
+  email:
+    contact_email: geodata@library.ucla.edu
+    delivery_method: smtp # or: smtp
+    # see: https://guides.rubyonrails.org/action_mailer_basics.html#action-mailer-configuration
+    smtp_settings:
+      address: smtp.ucla.edu
+      port: 25
+
+# Configuration for solr chart
+# see: https://github.com/helm/charts/blob/master/incubator/solr/values.yaml
+solrRunMode: standalone
+solr:
+  enabled: false
+  auth:
+    enabled: false
+  configName: shorelineconf
+  coreName: shoreline
+  cloudBoostrap: false
+  cloudEnabled: false
+  # If solr.enabled is false, then
+  #   * set solrHostname to external solr FQDN
+  #   * set solrPort to external solr port
+  #   * set zookeeperHostname to external zookeeper FQDN
+  #   * set zookeeperPort to external zookeeper port
+  # solrHostname: external-shoreline-solr-fqdn
+  # solrPort: "8983"
+  # zookeeperHostname: external-shoreline-zookeeper-fqdn
+  # zookeeperPort: "2181"
+  # Settings for solr java memory
+  # javaMem: "-Xms2g -Xmx3g"
+  # Settings for zk java memory
+  # zookeeper:
+  #   env:
+  #     JVMFLAGS: "-Xms512m -Xmx1g"
+  solrHostname: "t-u-shorelinesolr01.library.ucla.edu"
+  solrPort: "8983"
+
+# Configuration for postgresql chart
+# see: https://github.com/kubernetes/charts/blob/master/stable/postgresql/README.md
+postgresql:
+  enabled: false
+  postgresqlHostname: "p-d-postgres01.library.ucla.edu"
+  auth: 
+    database: shoreline-discovery
+  containerPorts:
+    postgresql: 5432
+
+geoserver:
+  enabled: true
+  # If geoserver.enabled is false, then
+  #   * set geoserverHostname to external geoserver FQDN
+  # geoserverHostname: external-shoreline-geoserver-fqdn
+  admin:
+    username: admin
+  persistence:
+    enabled: true
+  ingress:
+    annotations:
+      nginx.ingress.kubernetes.io/proxy-body-size: 512m
+    enabled: true
+    hosts: ['geoserver.library.ucla.edu']
+    tls: []
+  jvm:
+    initialMemory: 2G
+    maximumMemory: 2G
+  resources:
+    requests:
+      cpu: 500m
+      memory: 2Gi
+    limits:
+      cpu: 500m
+      memory: 2Gi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
