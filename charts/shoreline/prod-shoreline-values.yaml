@@ -49,12 +49,12 @@ existingSecret:
   name: shoreline-externalsecret
   enabled: true
   externalSecrets:
-    geoserver_admin_passwd: "/test/testsoftwaredev/shorelinetest/shoreline/geoserver_admin_passwd"
-    db_passwd: "/test/testsoftwaredev/shorelinetest/shoreline/db_passwd"
-    db_username: "/test/testsoftwaredev/shorelinetest/shoreline/db_username"
-    secret_key_base: "/test/testsoftwaredev/shorelinetest/shoreline/secret_key_base"
-    smtp_password: "/test/testsoftwaredev/shorelinetest/shoreline/smtp_password"
-    solr_url: "/test/testsoftwaredev/shorelinetest/shoreline/solr_url"
+    geoserver_admin_passwd: "/systems/prodsoftwaredev/shorelineprod/geoserver_admin_passwd"
+    db_passwd: "/systems/prodsoftwaredev/shorelineprod/db_passwd"
+    db_username: "/systems/prodsoftwaredev/shorelineprod/db_username"
+    secret_key_base: "/systems/prodsoftwaredev/shorelineprod/secret_key_base"
+    smtp_password: "/systems/prodsoftwaredev/shorelineprod/smtp_password"
+    solr_url: "/systems/prodsoftwaredev/shorelineprod/solr_url"
 
 # Shoreline resources
 resources:
@@ -109,7 +109,7 @@ solr:
   # zookeeper:
   #   env:
   #     JVMFLAGS: "-Xms512m -Xmx1g"
-  solrHostname: "t-u-shorelinesolr01.library.ucla.edu"
+  solrHostname: "p-u-shorelinesolr01.library.ucla.edu"
   solrPort: "8983"
 
 # Configuration for postgresql chart
@@ -118,7 +118,7 @@ postgresql:
   enabled: false
   postgresqlHostname: "p-d-postgres01.library.ucla.edu"
   auth: 
-    database: shoreline-discovery
+    database: shorelineprod
   containerPorts:
     postgresql: 5432
 
