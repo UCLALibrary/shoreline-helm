@@ -2,20 +2,24 @@ apiVersion: v2
 appVersion: "0.1"
 description: Charts for GeoBlacklight & Shoreline
 name: shoreline
-version: 0.6.0
+version: 0.7.0
 dependencies:
   - name: postgresql
-    version: 11.6.5
-    repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+    version: 12.5.2
+    repository: oci://registry-1.docker.io/bitnamicharts
     condition: postgresql.enabled
   - name: geoserver
     version: 1.5.0
     repository: file://../geoserver
     condition: geoserver.enabled
   - name: solr
-    version: 6.1.4
-    repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
+    version: 7.4.0
+    repository: oci://registry-1.docker.io/bitnamicharts
     condition: solr.enabled
   - name: common
     version: 0.1.0
     repository: file://../common
+  - name: minio
+    version: 12.4.1
+    repository: oci://registry-1.docker.io/bitnamicharts
+    condition: minio.enabled
