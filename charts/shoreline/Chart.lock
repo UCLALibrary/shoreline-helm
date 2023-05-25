@@ -1,15 +1,18 @@
 dependencies:
 - name: postgresql
-  repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
-  version: 11.6.5
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 12.5.2
 - name: geoserver
   repository: file://../geoserver
   version: 1.5.0
 - name: solr
-  repository: https://raw.githubusercontent.com/bitnami/charts/archive-full-index/bitnami
-  version: 6.1.4
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 7.4.0
 - name: common
   repository: file://../common
   version: 0.1.0
-digest: sha256:59f7c6478c547165e2278f00c3a84155b1d1113a9f72ff87ad991ed2bedde7a7
-generated: "2022-09-14T00:11:24.384172639Z"
+- name: minio
+  repository: oci://registry-1.docker.io/bitnamicharts
+  version: 12.4.1
+digest: sha256:667d1685fdaf3b4e57999bea7cefdb6193837926cd48f09107af1473fb1fcfb1
+generated: "2023-05-17T21:10:12.781129747Z"

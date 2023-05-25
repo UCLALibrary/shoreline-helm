@@ -1,0 +1,39 @@
+{{- if .Values.shoreline.sample_data }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "shoreline.fullname" . }}-seed-datasets
+  labels:
+    {{- include "shoreline.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    "helm.sh/hook-weight": "1"
+spec:
+  template:
+    metadata:
+    {{- with .Values.vaultSecret.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      name: {{ include "shoreline.fullname" . }}-seed-datasets
+    spec:
+      restartPolicy: OnFailure
+      serviceAccountName: {{ template "shoreline.serviceAccountName" . }}
+      containers:
+        - name: seed-sample-datasets
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          args:
+            - bundle
+            - exec
+            - rake
+            - "shoreline:staging_area:upload_shapefiles"
+          envFrom:
+            - configMapRef:
+                name: {{ include "shoreline.fullname" . }}-env
+          {{- if not .Values.vaultSecret.enabled }}
+            - secretRef:
+                name: {{ template "shoreline.secretName" . }}
+          {{- end }}
+{{- end }}

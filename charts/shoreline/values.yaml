@@ -92,7 +92,7 @@ solr:
   enabled: true
   image:
     repository: bitnami/solr
-    tag: 8.11.2-debian-11-r46
+    tag: 8.11.2-debian-11-r106
   auth:
     enabled: true
     adminUsername: admin
@@ -138,7 +138,7 @@ solr:
 postgresql:
   image:
     repository: bitnami/postgresql
-    tag: 12.12.0-debian-11-r36
+    tag: 12.14.0-debian-11-r29
   architecture: standalone
   enabled: true
   # If postgresql.enabled is false, then
@@ -173,6 +173,21 @@ geoserver:
     enabled: true
     hosts: ['geoserver.local']
     tls: []
+
+# Configuration for minio chart
+# This is currently only used for Review applications in CI/CD pipelines
+# see: https://github.com/bitnami/charts/blob/master/bitnami/minio/README.md
+minio:
+  enabled: false
+  defaultBuckets: shoreline-staging-area-dev:public
+  auth:
+    rootUser: shoreline-access-key
+    rootPassword: shoreline-secret-key
+  persistence:
+    enabled: false
+  image:
+    repository: bitnami/minio
+    tag: 2023.4.20-debian-11-r3
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
